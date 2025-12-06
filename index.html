@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Decentralized Waste-to-Fuel Units — Catalytic Thermal Decomposition</title>
+<meta name="description" content="Decentralized Waste-to-Fuel units: catalytic thermal decomposition, IoT dashboard simulation, conversion web-app, product models, case studies, and sustainability impact." />
+<style>
+  /* =========================
+     THEME & TYPOGRAPHY
+     ========================= */
+  :root{
+    --green: #2ecc71;
+    --dark: #0b2239;
+    --muted: #6b7280;
+    --bg: #f6fbf9;
+    --card: #ffffff;
+    --glass: rgba(255,255,255,0.6);
+    --radius: 12px;
+    --focus: 3px solid rgba(46,204,113,0.16);
+    --maxw: 1200px;
+    --ui-gap: 18px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#f7fff9,#f6fbff);color:var(--dark);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45}
+  a{color:var(--dark);text-decoration:none}
+  img{max-width:100%;display:block}
+
+  /* =========================
+     NAVBAR
+     ========================= */
+  header{position:sticky;top:0;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);border-bottom:1px solid rgba(11,34,57,0.06);z-index:120}
+  .nav{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:12px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--green),#16a085);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:0 8px 26px rgba(11,34,57,0.06)}
+  nav a{padding:8px 10px;border-radius:8px;font-weight:600;color:var(--dark)}
+  nav a[aria-current="true"]{background:rgba(11,34,57,0.04);font-weight:800}
+  .cta{background:var(--green);color:white;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700;box-shadow:0 8px 28px rgba(46,204,113,0.14)}
+  .sec-cta{background:transparent;border:1px solid rgba(11,34,57,0.06);padding:9px 12px;border-radius:8px;cursor:pointer}
+
+  main{max-width:var(--maxw);margin:18px auto;padding:0 20px}
+
+  /* =========================
+     HERO
+     ========================= */
+  .hero{display:grid;grid-template-columns:1fr 460px;gap:22px;align-items:center;margin-top:18px}
+  .hero-card{background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.86));padding:28px;border-radius:16px;box-shadow:0 10px 40px rgba(11,34,57,0.06)}
+  h1{font-size:28px;margin:0 0 8px;color:var(--dark)}
+  p.lead{margin:0 0 16px;color:var(--muted)}
+  .hero-actions{display:flex;gap:12px;align-items:center}
+  .small-meta{font-size:13px;color:var(--muted)}
+  /* animated background panel */
+  .hero-visual{height:420px;border-radius:16px;position:relative;overflow:hidden;background:linear-gradient(135deg,#e9fff4,#f0fbff);display:flex;align-items:center;justify-content:center}
+  .bg-shape{position:absolute;border-radius:50%;filter:blur(20px);opacity:0.14;animation:float 8s ease-in-out infinite}
+  .bg1{width:240px;height:240px;left:-40px;top:20px;background:linear-gradient(135deg,var(--green),#10a37f)}
+  .bg2{width:160px;height:160px;right:10px;bottom:0;background:linear-gradient(135deg,#16a085,#0b7a6a)}
+  .bg3{width:120px;height:120px;left:60px;bottom:-20px;background:linear-gradient(135deg,#2ecc71,#59c7a1)}
+  @keyframes float{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-16px) scale(1.03)}100%{transform:translateY(0) scale(1)}}
+
+  .steps{display:flex;gap:12px;margin-top:18px}
+  .step{flex:1;padding:12px;border-radius:12px;background:linear-gradient(180deg,#fff,#f7fff8);box-shadow:0 8px 26px rgba(11,34,57,0.04);text-align:center}
+  .step svg{width:42px;height:42px;margin-bottom:8px}
+
+  /* benefits */
+  .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+  .benefit{padding:14px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfffb);box-shadow:0 10px 30px rgba(11,34,57,0.04);display:flex;gap:12px;align-items:center;transition:transform .18s ease,box-shadow .18s ease}
+  .benefit:focus-within,.benefit:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(11,34,57,0.08)}
+  .benefit svg{flex-shrink:0}
+
+  /* generalized sections */
+  section.block{margin-top:22px;padding:18px 0}
+  .section-title{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .section-title h2{margin:0;font-size:20px}
+
+  /* tech grid */
+  .tech-grid{display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start}
+  .tech-card{padding:14px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfffc);box-shadow:0 10px 30px rgba(11,34,57,0.05)}
+
+  /* reactor 3d-like (CSS + SVG) */
+  .reactor-diagram{display:flex;align-items:center;justify-content:center;position:relative;height:260px}
+  .reactor-base{width:320px;height:200px;border-radius:14px;background:linear-gradient(180deg,#0e4860,#164b64);box-shadow:inset 0 6px 24px rgba(0,0,0,0.25);position:relative;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .label{position:absolute;background:rgba(255,255,255,0.92);padding:6px 8px;border-radius:6px;color:var(--dark);font-weight:700;font-size:12px;box-shadow:0 6px 20px rgba(11,34,57,0.08)}
+  .lbl-reactor{left:18px;top:8px}
+  .lbl-condenser{right:18px;top:8px}
+  .lbl-storage{left:18px;bottom:8px}
+  .lbl-scrubber{right:18px;bottom:8px}
+  .tooltip{font-size:12px;color:var(--muted);padding:6px;background:white;border-radius:8px;box-shadow:0 6px 20px rgba(11,34,57,0.06)}
+
+  /* dashboard */
+  .dashboard{display:grid;grid-template-columns:360px 1fr;gap:18px}
+  .dash-card{padding:12px;background:linear-gradient(180deg,#fff,#f7fff8);border-radius:12px;box-shadow:0 10px 30px rgba(11,34,57,0.05)}
+  .telemetry{display:flex;flex-direction:column;gap:10px}
+  .telemetry .stat{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:#fff}
+  .toggle{display:flex;gap:8px;align-items:center}
+
+  /* chart */
+  .chart-wrap{padding:12px;background:#fff;border-radius:10px;box-shadow:0 8px 26px rgba(11,34,57,0.04)}
+
+  /* simulation log */
+  .log{height:150px;overflow:auto;background:#fff;padding:10px;border-radius:10px;font-family:monospace;font-size:13px}
+
+  /* conversion app */
+  .app{display:grid;grid-template-columns:1fr 360px;gap:18px}
+  .form-control{display:flex;flex-direction:column;gap:6px}
+  .rows{display:flex;gap:10px}
+  input[type="range"]{width:100%}
+  .progress{height:12px;background:#e9f8f0;border-radius:999px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#10a37f);width:0%;transition:width .6s ease}
+
+  .result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .small{font-size:13px;color:var(--muted)}
+
+  /* products & cases */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .card{padding:16px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfffb);box-shadow:0 10px 30px rgba(11,34,57,0.05);transition:transform .18s ease}
+  .card:hover{transform:translateY(-8px)}
+
+  /* impact counters */
+  .impact{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .impact .kpi{padding:16px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfffe);text-align:center}
+  .kpi .num{font-size:22px;font-weight:800;color:var(--dark)}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
+  form{display:flex;flex-direction:column;gap:10px}
+  input,textarea,select{padding:10px;border-radius:8px;border:1px solid rgba(11,34,57,0.08);font-size:14px}
+  .submit{background:var(--dark);color:white;padding:12px;border-radius:10px;border:0;cursor:pointer;font-weight:800}
+
+  /* footer */
+  footer{margin-top:22px;padding:18px 0;text-align:center;color:var(--muted)}
+
+  /* responsive */
+  @media(max-width:1100px){.hero{grid-template-columns:1fr} .tech-grid{grid-template-columns:1fr} .dashboard{grid-template-columns:1fr} .app{grid-template-columns:1fr} .cards{grid-template-columns:1fr} .impact{grid-template-columns:repeat(2,1fr)} .contact-grid{grid-template-columns:1fr}}
+  @media(max-width:520px){nav a{display:none} nav .cta{padding:8px 10px}}
+  /* accessible focus */
+  :focus{outline:none}
+  a:focus, button:focus, input:focus, select:focus, textarea:focus {box-shadow:var(--focus);border-radius:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav" role="navigation" aria-label="Main navigation">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">WtF</div>
+      <div>
+        <div style="font-weight:800">Waste-to-Fuel</div>
+        <div style="font-size:12px;color:var(--muted)">Catalytic Thermal Decomposition</div>
+      </div>
+    </div>
+    <nav aria-label="Primary">
+      <a href="#home" data-link>Home</a>
+      <a href="#benefits" data-link>Benefits</a>
+      <a href="#technology" data-link>Technology</a>
+      <a href="#dashboard" data-link>IoT Dashboard</a>
+      <a href="#conversion" data-link>Conversion App</a>
+      <a href="#products" data-link>Products</a>
+      <a href="#cases" data-link>Case Studies</a>
+      <a href="#impact" data-link>Impact</a>
+      <a href="#contact" data-link>Contact</a>
+    </nav>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="sec-cta" id="exportRequest">Export demo request</button>
+      <button class="cta" id="reqDemoBtn">Request Demo</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HOME / HERO -->
+  <section id="home" class="hero-card" aria-labelledby="homeTitle">
+    <div class="hero" role="region" aria-label="Hero">
+      <div>
+        <h1 id="homeTitle">Convert Plastic Waste into Clean Fuel – Decentralized, Smart, Sustainable.</h1>
+        <p class="lead">Modular on-site units convert mixed plastic waste into usable liquid fuel and syngas using catalytic thermal decomposition. Monitor units in real-time via IoT and make data-driven decisions.</p>
+        <div class="hero-actions" role="group" aria-label="Hero actions">
+          <button class="cta" id="heroRequest">Request Demo</button>
+          <button class="sec-cta" id="seeDemo">See Demo App</button>
+        </div>
+
+        <div class="steps" aria-hidden="false" style="margin-top:18px">
+          <div class="step" tabindex="0">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18" stroke="#16a085" stroke-width="2" stroke-linecap="round"/></svg>
+            <h4 style="margin:6px 0">Waste</h4>
+            <div class="small-meta">Collection & feed preparation</div>
+          </div>
+          <div class="step" tabindex="0">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18" stroke="#16a085" stroke-width="2" stroke-linecap="round"/></svg>
+            <h4 style="margin:6px 0">Processing</h4>
+            <div class="small-meta">Catalytic thermal decomposition</div>
+          </div>
+          <div class="step" tabindex="0">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12h20" stroke="#16a085" stroke-width="2" stroke-linecap="round"/></svg>
+            <h4 style="margin:6px 0">Fuel</h4>
+            <div class="small-meta">Liquid fuel & syngas collection</div>
+          </div>
+        </div>
+
+        <div class="benefits" id="benefits" style="margin-top:18px">
+          <div class="benefit" tabindex="0" role="article" aria-labelledby="b1">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#e9fff4"/><path d="M9 12l2 2 4-4" fill="none" stroke="#16a085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><div id="b1" style="font-weight:800">Decentralized</div><div class="small">Process at source, reduce transport.</div></div>
+          </div>
+          <div class="benefit" tabindex="0" role="article" aria-labelledby="b2">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="#e9fff4"/><path d="M7 12h10" stroke="#16a085" stroke-width="2" stroke-linecap="round"/></svg>
+            <div><div id="b2" style="font-weight:800">Real-time IoT</div><div class="small">Live telemetry & alerts.</div></div>
+          </div>
+          <div class="benefit" tabindex="0" role="article" aria-labelledby="b3">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="#e9fff4"/><path d="M6 8h12M6 12h8M6 16h4" stroke="#16a085" stroke-width="2" stroke-linecap="round"/></svg>
+            <div><div id="b3" style="font-weight:800">Reduce CO₂</div><div class="small">Less landfill & transport emissions.</div></div>
+          </div>
+          <div class="benefit" tabindex="0" role="article" aria-labelledby="b4">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#e9fff4"/><path d="M9 12h6" stroke="#16a085" stroke-width="2" stroke-linecap="round"/></svg>
+            <div><div id="b4" style="font-weight:800">Local Fuel</div><div class="small">Run generators & vehicles locally.</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px" class="small-meta">Testimonials</div>
+        <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+          <div class="card" style="min-width:220px"><strong>Municipal Admin</strong><div class="small">"Cluster units reduced collection frequency & provided fuel for two trucks."</div></div>
+          <div class="card" style="min-width:220px"><strong>Housing Society</strong><div class="small">"We ran our generator on recovered fuel and cut monthly diesel cost."</div></div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="bg-shape bg1"></div>
+        <div class="bg-shape bg2"></div>
+        <div class="bg-shape bg3"></div>
+
+        <!-- minimal schematic -->
+        <svg width="320" height="220" viewBox="0 0 320 220" aria-hidden="true" role="img">
+          <rect x="12" y="70" rx="12" ry="12" width="120" height="80" fill="#fff"/><!-- feed -->
+          <text x="22" y="95" fill="#0b2239" font-size="12">Feed</text>
+          <rect x="140" y="50" rx="18" ry="18" width="120" height="120" fill="#0b2239" opacity="0.95" />
+          <text x="165" y="120" fill="#fff" font-size="14" font-weight="700">Reactor</text>
+          <rect x="270" y="70" rx="10" ry="10" width="38" height="80" fill="#fff"/>
+          <text x="274" y="95" fill="#0b2239" font-size="10">Fuel</text>
+          <path d="M132 110 L140 100" stroke="#0b2239" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNOLOGY -->
+  <section id="technology" class="block" aria-labelledby="techTitle">
+    <div class="section-title"><h2 id="techTitle">Technology — Catalytic Thermal Decomposition</h2></div>
+    <div class="tech-grid" role="region" aria-label="Technology details">
+      <div>
+        <div class="tech-card">
+          <h3>How it works</h3>
+          <p class="small">Plastic feedstock is heated in an oxygen-limited (anaerobic) reactor. In presence of a catalyst and staged heating zones, long polymer chains break into shorter hydrocarbons. Vapors are condensed into liquid fractions (diesel-like), non-condensable gases (syngas) are recovered, and inert char remains as solid residue. Continuous monitoring of temperature and pressure ensures safe, optimized operation.</p>
+
+          <h4 style="margin-top:12px">Reaction Chamber Design</h4>
+          <ul class="small">
+            <li>Insulated, staged zones for controlled cracking.</li>
+            <li>Feed system with metering to avoid oxygen ingress.</li>
+            <li>Condensation train for fraction separation (light/medium/heavy).</li>
+            <li>Integrated scrubber and catalytic converter for emissions control.</li>
+          </ul>
+
+          <h4 style="margin-top:12px">Types of Plastics</h4>
+          <p class="small">Suitable: PE, PP, PS and most mixed thermoplastics. Caution: PVC and chlorine-containing plastics require pre-treatment due to HCl formation — avoid without professional chemical scrubbing.</p>
+
+          <h4 style="margin-top:12px">Outputs & Safety</h4>
+          <p class="small">Liquid fuel (density approx. 0.85 kg/L), syngas (combustible), and char. Safety systems: temperature/pressure interlocks, gas detectors, emergency shutdown, continuous emissions monitoring. Real deployment requires permits and expert engineering.</p>
+        </div>
+
+        <div style="margin-top:12px" class="tech-card">
+          <h4>Waste Conversion Process (Collapsible)</h4>
+          <button id="toggleProcess" class="sec-cta" aria-expanded="false">Show process details</button>
+          <div id="processPanel" style="margin-top:10px;display:none">
+            <ol class="small">
+              <li><strong>Feed preparation & sorting</strong>: remove metals, glass, PVC. </li>
+              <li><strong>Pre-treatment</strong>: shredding & drying for consistent feed.</li>
+              <li><strong>Reactor heating</strong>: oxygen-limited, staged zones.</li>
+              <li><strong>Catalytic decomposition</strong>: catalyst accelerates chain scission at lower temps.</li>
+              <li><strong>Condensation & fractionation</strong>: separate light/medium/heavy fractions.</li>
+              <li><strong>Gas cleaning</strong>: scrubbers and filters for syngas.</li>
+              <li><strong>Residue</strong>: char handling and potential reuse in materials.</li>
+              <li><strong>Emissions control</strong>: scrubbers, catalytic converters, monitoring.</li>
+            </ol>
+            <p class="small"><strong>Safety note:</strong> This demo provides conceptual information. Real installations require licensed engineers, environmental permits, and emissions testing.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D-like diagram -->
+      <div>
+        <div class="reactor-diagram" aria-hidden="true">
+          <div class="reactor-base" role="img" aria-label="Reactor diagram">
+            <div style="font-weight:800">Reactor Core</div>
+            <div style="font-size:13px;margin-top:6px" class="small">Catalytic thermal zone</div>
+            <div class="label lbl-reactor" title="Primary reaction zone">Reactor</div>
+            <div class="label lbl-condenser" title="Vapor condensation">Condenser</div>
+            <div class="label lbl-storage" title="Liquid fuel storage">Storage</div>
+            <div class="label lbl-scrubber" title="Emissions scrubber">Scrubber</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="tech-card">
+          <h4>Pollution Control Systems</h4>
+          <p class="small">Multi-stage scrubbers for acidic gases, catalytic converters for VOCs, particulate filtration, and continuous emissions monitoring (CEMS). Proper material selection and maintenance are critical to performance and compliance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="block" aria-labelledby="dashTitle">
+    <div class="section-title"><h2 id="dashTitle">IoT Dashboard — Live Simulation</h2></div>
+    <div class="dashboard" role="region" aria-label="IoT dashboard">
+      <div>
+        <div class="dash-card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small-meta">Unit Status</div>
+              <div style="font-weight:800;font-size:20px" id="unitStatus">Stopped</div>
+            </div>
+            <div class="toggle" aria-hidden="false">
+              <label style="font-weight:700">Reactor</label>
+              <button id="toggleReactor" class="sec-cta" aria-pressed="false">Start</button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px" class="telemetry" aria-live="polite">
+            <div class="stat"><div class="small">Temperature</div><div id="tempStat" style="font-weight:800">-- °C</div></div>
+            <div class="stat"><div class="small">Pressure</div><div id="pressStat" style="font-weight:800">-- kPa</div></div>
+            <div class="stat"><div class="small">Fuel Output (Today)</div><div id="fuelStat" style="font-weight:800">-- L</div></div>
+            <div class="stat"><div class="small">Waste processed (Today)</div><div id="wasteStat" style="font-weight:800">-- kg</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="dash-card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="small-meta">Event Log</div>
+            <div class="small" id="logCount">0 events</div>
+          </div>
+          <div id="eventLog" class="log" aria-live="polite" tabindex="0" role="log" aria-atomic="false" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="chart-wrap dash-card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="small-meta">Reactor Temperature Trend</div>
+            <div class="small">Live (simulated)</div>
+          </div>
+          <canvas id="chartCanvas" width="800" height="240" style="display:block;margin-top:10px;width:100%;height:240px"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONVERSION APP -->
+  <section id="conversion" class="block" aria-labelledby="convTitle">
+    <div class="section-title"><h2 id="convTitle">Waste → Fuel Conversion — Web App</h2></div>
+    <div class="app" role="application" aria-label="Conversion simulator">
+      <div>
+        <div class="card">
+          <h3>Feedstock & Parameters</h3>
+          <div class="form-control">
+            <label for="mass">Total feed mass (kg)</label>
+            <input id="mass" type="number" min="1" value="100" />
+          </div>
+
+          <div style="margin-top:10px">
+            <label>Plastic composition (%) — values must sum ≤ 100</label>
+            <div class="rows" style="align-items:center">
+              <div style="flex:1">
+                <label class="small">PE: <span id="peVal">50</span>%</label>
+                <input id="pe" type="range" min="0" max="100" value="50" />
+              </div>
+              <div style="flex:1">
+                <label class="small">PP: <span id="ppVal">30</span>%</label>
+                <input id="pp" type="range" min="0" max="100" value="30" />
+              </div>
+              <div style="flex:1">
+                <label class="small">PS: <span id="psVal">15</span>%</label>
+                <input id="ps" type="range" min="0" max="100" value="15" />
+              </div>
+              <div style="flex:1">
+                <label class="small">Others: <span id="otherVal">5</span>%</label>
+                <input id="other" type="range" min="0" max="100" value="5" />
+              </div>
+            </div>
+            <div id="compWarning" class="small" style="color:crimson;display:none;margin-top:6px">Composition sums to > 100% — please adjust sliders.</div>
+            <div id="pvcWarning" class="small" style="color:crimson;display:none;margin-top:6px">Warning: PVC/Chlorine present — pre-treatment required.</div>
+          </div>
+
+          <div style="margin-top:10px">
+            <label class="small">Catalyst</label>
+            <div style="display:flex;gap:8px">
+              <label><input type="radio" name="cat" value="A" checked /> Catalyst A (balanced)</label>
+              <label><input type="radio" name="cat" value="B" /> Catalyst B (higher yield)</label>
+              <label><input type="radio" name="cat" value="C" /> Catalyst C (fast, lower selectivity)</label>
+            </div>
+          </div>
+
+          <div style="margin-top:10px">
+            <label class="small">Temperature Profile</label>
+            <select id="tempProfile">
+              <option value="low">Low (350°C)</option>
+              <option value="med" selected>Medium (420°C)</option>
+              <option value="high">High (480°C)</option>
+            </select>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button id="simulateBtn" class="cta">Simulate Conversion</button>
+            <button id="downloadCSV" class="sec-cta">Download Report (CSV)</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="card">
+          <h4>Process Progress</h4>
+          <div class="small-meta">Step-by-step simulation</div>
+          <div style="margin-top:8px">
+            <div class="progress" aria-hidden="true"><i id="progressBar" style="width:0%"></i></div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px">
+              <div id="stepLabel" style="font-weight:700">Idle</div>
+              <div id="progressPct" class="small">0%</div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px">
+            <h4>Estimates</h4>
+            <div class="result-grid">
+              <div><div class="small">Liquid yield (L)</div><div id="estLiquid" style="font-weight:800">-</div></div>
+              <div><div class="small">Syngas (m³)</div><div id="estGas" style="font-weight:800">-</div></div>
+              <div><div class="small">Char (kg)</div><div id="estChar" style="font-weight:800">-</div></div>
+              <div><div class="small">Energy (kWh)</div><div id="estEnergy" style="font-weight:800">-</div></div>
+            </div>
+            <div style="margin-top:8px" class="small">Mass balance: <span id="massBalance">-</span></div>
+            <div style="margin-top:6px" class="small">Yield % (liquid / feed): <span id="yieldPct">-</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- right column: conversion quick inputs summary -->
+      <div>
+        <div class="card">
+          <h4>Quick Summary</h4>
+          <div class="small">Feed mass: <strong id="quickMass">100 kg</strong></div>
+          <div class="small">Composition: <span id="quickComp">PE50/PP30/PS15/Others5</span></div>
+          <div class="small" style="margin-top:8px">Selected catalyst: <strong id="quickCat">A</strong></div>
+          <div class="small">Temperature: <strong id="quickTemp">Medium</strong></div>
+
+          <div style="margin-top:12px">
+            <h4>Download & Export</h4>
+            <div class="small">After simulation you can download a CSV report of inputs & results.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="card">
+          <h4>Notes & Validation</h4>
+          <div class="small">This is a client-side simulation with simplified formulas. It is for planning and educational use only. Real systems require lab tests and engineering design.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="products" class="block" aria-labelledby="prodTitle">
+    <div class="section-title"><h2 id="prodTitle">Machine Models / Products</h2></div>
+    <div class="cards" role="list">
+      <div class="card" role="listitem" aria-label="50 kg per day unit">
+        <h3>50 kg/day Unit</h3>
+        <div class="small">Fuel output: ~12–18 L/day</div>
+        <div class="small">Area: 3 m²</div>
+        <div class="small">Installation cost: ₹2,50,000 (estimate)</div>
+        <div class="small">Power: 1.5 kW</div>
+        <div class="small" style="margin-top:6px">Suitable for: Housing society / small cluster</div>
+      </div>
+
+      <div class="card" role="listitem" aria-label="100 kg per day unit">
+        <h3>100 kg/day Unit</h3>
+        <div class="small">Fuel output: ~25–40 L/day</div>
+        <div class="small">Area: 6 m²</div>
+        <div class="small">Installation cost: ₹5,50,000 (estimate)</div>
+        <div class="small">Power: 3 kW</div>
+        <div class="small" style="margin-top:6px">Suitable for: Small industry / large society</div>
+      </div>
+
+      <div class="card" role="listitem" aria-label="500 kg per day unit">
+        <h3>500 kg/day Unit</h3>
+        <div class="small">Fuel output: ~120–200 L/day</div>
+        <div class="small">Area: 20 m²</div>
+        <div class="small">Installation cost: ₹22,00,000 (estimate)</div>
+        <div class="small">Power: 12–18 kW</div>
+        <div class="small" style="margin-top:6px">Suitable for: Municipality / industrial cluster</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section id="cases" class="block" aria-labelledby="caseTitle">
+    <div class="section-title"><h2 id="caseTitle">Case Studies</h2></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:260px">
+        <h4>Housing Society</h4>
+        <div class="small">Installed 50 kg/day unit. Result: ~15 L/day fuel used for generator; saved ~30% diesel spend.</div>
+      </div>
+      <div class="card" style="flex:1;min-width:260px">
+        <h4>Municipal Ward</h4>
+        <div class="small">Cluster deployment (3 units) supplying fuel to 2 garbage trucks; reduced collection trips by 20%.</div>
+      </div>
+      <div class="card" style="flex:1;min-width:260px">
+        <h4>Factory</h4>
+        <div class="small">On-site 100 kg/day unit reduced disposal fees and produced backup fuel for standby generators.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px" class="card">
+      <h4>Demo Map (Illustrative)</h4>
+      <!-- simple map-like SVG with pins -->
+      <svg width="100%" height="120" viewBox="0 0 600 120" role="img" aria-label="Illustrative map">
+        <rect width="100%" height="100%" rx="8" fill="#f6fffb"/>
+        <circle cx="110" cy="60" r="8" fill="#2ecc71"/><text x="130" y="65" font-size="12" fill="#0b2239">Housing society</text>
+        <circle cx="300" cy="40" r="8" fill="#2ecc71"/><text x="320" y="45" font-size="12" fill="#0b2239">Municipal ward</text>
+        <circle cx="480" cy="80" r="8" fill="#2ecc71"/><text x="500" y="85" font-size="12" fill="#0b2239">Factory</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section id="impact" class="block" aria-labelledby="impTitle">
+    <div class="section-title"><h2 id="impTitle">Sustainability & Impact</h2></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div class="impact" style="flex:1;min-width:260px">
+        <div class="kpi" aria-hidden="false">
+          <div class="small">CO₂ saved (kg)</div>
+          <div class="num" id="kco2">0</div>
+          <div class="small">Estimate based on fuel displaced</div>
+        </div>
+        <div class="kpi" aria-hidden="false">
+          <div class="small">Fuel generated (L)</div>
+          <div class="num" id="kfuel">0</div>
+          <div class="small">Monthly estimate</div>
+        </div>
+        <div class="kpi" aria-hidden="false">
+          <div class="small">Plastic diverted (kg)</div>
+          <div class="num" id="kplastic">0</div>
+          <div class="small">From landfill</div>
+        </div>
+        <div class="kpi" aria-hidden="false">
+          <div class="small">Savings (₹ / day)</div>
+          <div class="num" id="ksavings">0</div>
+          <div class="small">Estimated operational saving</div>
+        </div>
+      </div>
+
+      <div class="card" style="flex:1;min-width:260px">
+        <h4>Assumptions</h4>
+        <div class="small">Estimates assume liquid fuel density 0.85 kg/L; diesel replacement factor and energy content approximations. Use site tests for precise planning.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="block" aria-labelledby="contactTitle">
+    <div class="section-title"><h2 id="contactTitle">Contact / Demo Booking</h2></div>
+    <div class="contact-grid" role="form" aria-label="Contact form">
+      <div>
+        <form id="contactForm">
+          <label for="cname">Name</label>
+          <input id="cname" name="name" required placeholder="Full name" />
+          <label for="corg">Organization</label>
+          <input id="corg" name="org" placeholder="Company / Society" />
+          <label for="cemail">Email</label>
+          <input id="cemail" name="email" type="email" required placeholder="you@example.com" />
+          <label for="cloc">Location</label>
+          <input id="cloc" name="loc" placeholder="City, State" />
+          <label for="cwaste">Waste generated per day (kg)</label>
+          <input id="cwaste" name="waste" type="number" min="0" placeholder="e.g., 50" />
+          <label for="cmsg">Message</label>
+          <textarea id="cmsg" rows="4" placeholder="Tell us about your use case"></textarea>
+          <label for="cfile">Upload sample waste photo (optional)</label>
+          <input id="cfile" name="file" type="file" accept="image/*" />
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="submit" type="submit">Submit Request</button>
+            <button type="button" class="sec-cta" id="clearQueue">Clear Saved Requests</button>
+          </div>
+        </form>
+
+        <div id="savedList" style="margin-top:12px"></div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h4>Contact</h4>
+          <div class="small">Email: <a href="mailto:ashishnalawade683@gmail.com">ashishnalawade683@gmail.com</a></div>
+          <div class="small" style="margin-top:8px">On submit the form prepares an email (opens your email client) and stores a local copy (browser only) for review.</div>
+          <div style="margin-top:12px">
+            <button id="openMailLink" class="sec-cta">Export demo request (open email)</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="card">
+          <h4>Privacy & Notes</h4>
+          <div class="small">File upload stays in the browser for this demo. To send data to a server replace the mailto mechanism with a backend POST (see technical notes in comments).</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer role="contentinfo">
+    <div style="max-width:var(--maxw);margin:0 auto;padding:8px 20px;color:var(--muted)">
+      <div>© <strong>Waste-to-Fuel</strong> — Catalytic Thermal Decomposition • Built as a demo. Contact: <a href="mailto:ashishnalawade683@gmail.com">ashishnalawade683@gmail.com</a></div>
+      <div style="margin-top:6px" class="small">Follow: <a href="#" aria-label="LinkedIn">LinkedIn</a> • <a href="#" aria-label="Twitter">Twitter</a></div>
+    </div>
+  </footer>
+</main>
+
+<!-- Modal -->
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="display:none;position:fixed;inset:0;background:rgba(11,34,57,0.45);align-items:center;justify-content:center;z-index:220">
+  <div style="background:white;padding:20px;border-radius:12px;max-width:520px;margin:20px">
+    <h3 id="modalTitle">Request Submitted</h3>
+    <p class="small">Thank you! Your demo request has been queued and a prefilled email will open in your email client. We also stored a local copy for review.</p>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button id="closeModal" class="sec-cta">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   UTILITY & NAV INTERACTIONS
+   ========================= */
+(function(){
+  // Helper: scroll with offset for sticky nav
+  const HEADER_OFFSET = 80;
+  function scrollToSection(id){
+    const el = document.querySelector(id);
+    if(!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+    window.scrollTo({top, behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-link]').forEach(a=>{
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      scrollToSection(this.getAttribute('href'));
+    });
+  });
+
+  // Active section highlight (simple)
+  const links = Array.from(document.querySelectorAll('nav a'));
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+  function updateActive(){
+    const pos = window.scrollY + HEADER_OFFSET + 20;
+    let current = sections[0];
+    for(const s of sections){
+      if(s && s.offsetTop <= pos) current = s;
+    }
+    links.forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + current.id ? 'true' : 'false'));
+  }
+  window.addEventListener('scroll', updateActive);
+  updateActive();
+
+  // Hero CTA anchors
+  document.getElementById('heroRequest').addEventListener('click', ()=> scrollToSection('#contact'));
+  document.getElementById('seeDemo').addEventListener('click', ()=> scrollToSection('#conversion'));
+  document.getElementById('reqDemoBtn').addEventListener('click', ()=> scrollToSection('#contact'));
+})();
+
+/* =========================
+   DASHBOARD SIMULATION
+   ========================= */
+(function(){
+  const tempEl = document.getElementById('tempStat');
+  const pressEl = document.getElementById('pressStat');
+  const fuelEl = document.getElementById('fuelStat');
+  const wasteEl = document.getElementById('wasteStat');
+  const eventLog = document.getElementById('eventLog');
+  const logCount = document.getElementById('logCount');
+  const unitStatusEl = document.getElementById('unitStatus');
+  const toggleBtn = document.getElementById('toggleReactor');
+  let reactorRunning = false;
+  let fuelTotal = 0;
+  let wasteTotal = 0;
+
+  // Chart setup (pure JS canvas)
+  const canvas = document.getElementById('chartCanvas');
+  const ctx = canvas.getContext('2d');
+  // maintain data (temps)
+  let tempSeries = Array.from({length:80}, (_,i) => 300 + Math.sin(i/6)*6 + (Math.random()*4));
+  function drawChart(){
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    canvas.width = Math.floor(w * (window.devicePixelRatio || 1));
+    canvas.height = Math.floor(h * (window.devicePixelRatio || 1));
+    ctx.setTransform((window.devicePixelRatio||1),0,0,(window.devicePixelRatio||1),0,0);
+    ctx.clearRect(0,0,w,h);
+    // background grid
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle = 'rgba(11,34,57,0.04)';
+    ctx.lineWidth = 1;
+    for(let i=0;i<4;i++){
+      ctx.beginPath();
+      ctx.moveTo(0,(i+1)*(h/5));
+      ctx.lineTo(w,(i+1)*(h/5));
+      ctx.stroke();
+    }
+    // compute scale
+    const max = Math.max(...tempSeries) * 1.05;
+    const min = Math.min(...tempSeries) * 0.95;
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#16a085';
+    for(let i=0;i<tempSeries.length;i++){
+      const x = i*(w/(tempSeries.length-1));
+      const y = h - ((tempSeries[i]-min)/(max-min))*h;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      // highlight last point
+      if(i===tempSeries.length-1){
+        ctx.fillStyle = '#0b2239';
+        ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+      }
+    }
+    ctx.stroke();
+    // label
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('Temp (°C)', 8, 16);
+  }
+
+  function logEvent(text){
+    const t = new Date().toLocaleTimeString();
+    const entry = document.createElement('div');
+    entry.textContent = `[${t}] ${text}`;
+    eventLog.prepend(entry);
+    logCount.textContent = (eventLog.children.length) + ' events';
+  }
+
+  // Reactor control
+  document.getElementById('toggleReactor').addEventListener('click', function(){
+    reactorRunning = !reactorRunning;
+    this.textContent = reactorRunning ? 'Stop' : 'Start';
+    this.setAttribute('aria-pressed', String(reactorRunning));
+    unitStatusEl.textContent = reactorRunning ? 'Running' : 'Stopped';
+    logEvent('Reactor ' + (reactorRunning ? 'started' : 'stopped'));
+  });
+
+  // simulation tick
+  function simTick(){
+    // temperature behavior: drifts up if running, slowly decays if stopped
+    const last = tempSeries[tempSeries.length-1];
+    let delta = (Math.random()*2 -1);
+    if(reactorRunning) delta += 1.8 + Math.random()*1.5;
+    else delta -= 0.6 + Math.random()*0.5;
+    let next = Math.max(50, Math.min(700, last + delta));
+    tempSeries.push(next);
+    if(tempSeries.length>120) tempSeries.shift();
+    // pressure correlated to temp
+    const pressure = Math.round(80 + (next-300)/5 + Math.random()*8);
+    // fuel/waste accumulation when running
+    if(reactorRunning){
+      const fuelInc = +(0.5 + Math.random()*1.8).toFixed(2); // L approx
+      const wasteInc = +(0.8 + Math.random()*2.2).toFixed(2);
+      fuelTotal = +(fuelTotal + fuelInc).toFixed(2);
+      wasteTotal = +(wasteTotal + wasteInc).toFixed(2);
+      // random events
+      if(Math.random() < 0.12) logEvent('Feed added to reactor');
+      if(Math.random() < 0.08) logEvent('Condensation stage active');
+      if(Math.random() < 0.05) logEvent('Catalyst circulation check');
+    } else {
+      // occasional small logs
+      if(Math.random() < 0.02) logEvent('Background diagnostics completed');
+    }
+
+    // update displays
+    tempEl.textContent = Math.round(next) + ' °C';
+    // also update visible stats
+    tempEl = tempEl || document.getElementById('tempStat'); // safety
+    document.getElementById('tempStat').textContent = Math.round(next) + ' °C';
+    document.getElementById('pressStat').textContent = pressure + ' kPa';
+    document.getElementById('fuelStat').textContent = fuelTotal + ' L';
+    document.getElementById('wasteStat').textContent = wasteTotal + ' kg';
+
+    drawChart();
+  }
+
+  // initial draw
+  drawChart();
+  // update every 1.2s
+  setInterval(simTick, 1200);
+  // ensure chart redraw on resize
+  window.addEventListener('resize', drawChart);
+})();
+
+/* =========================
+   CONVERSION APP LOGIC
+   ========================= */
+(function(){
+  // Element refs
+  const pe = document.getElementById('pe');
+  const pp = document.getElementById('pp');
+  const ps = document.getElementById('ps');
+  const other = document.getElementById('other');
+  const peVal = document.getElementById('peVal');
+  const ppVal = document.getElementById('ppVal');
+  const psVal = document.getElementById('psVal');
+  const otherVal = document.getElementById('otherVal');
+  const compWarning = document.getElementById('compWarning');
+  const pvcWarning = document.getElementById('pvcWarning');
+  const massInput = document.getElementById('mass');
+  const quickMass = document.getElementById('quickMass');
+  const quickComp = document.getElementById('quickComp');
+  const quickCat = document.getElementById('quickCat');
+  const quickTemp = document.getElementById('quickTemp');
+  const simulateBtn = document.getElementById('simulateBtn');
+  const progressBar = document.getElementById('progressBar');
+  const stepLabel = document.getElementById('stepLabel');
+  const progressPct = document.getElementById('progressPct');
+  const estLiquid = document.getElementById('estLiquid');
+  const estGas = document.getElementById('estGas');
+  const estChar = document.getElementById('estChar');
+  const estEnergy = document.getElementById('estEnergy');
+  const massBalance = document.getElementById('massBalance');
+  const yieldPct = document.getElementById('yieldPct');
+  const downloadCSV = document.getElementById('downloadCSV');
+
+  // conversion constants (editable)
+  const DENSITY_LIQUID = 0.85; // kg/L for liquid hydrocarbon
+  const BASE_YIELD = 0.45; // base fraction of feed that becomes liquid (kg/kg) at medium temp and catalyst A
+  // catalyst factors (multiplier to base yield)
+  const CATALYST_FACTORS = { A: 1.0, B: 1.12, C: 0.94 };
+  // temperature factors
+  const TEMP_FACTORS = { low: 0.9, med: 1.0, high: 1.08 };
+  // energy estimate per kg processed (kWh/kg) dependent on temp
+  const ENERGY_PER_KG = { low: 0.6, med: 0.9, high: 1.3 };
+  // syngas stoichiometric approx: m3 per kg feed (rough)
+  const GAS_PER_KG = { low: 0.6, med: 0.9, high: 1.2 };
+
+  // helpers to update UI
+  function updateQuick(){
+    peVal.textContent = pe.value;
+    ppVal.textContent = pp.value;
+    psVal.textContent = ps.value;
+    otherVal.textContent = other.value;
+    quickMass.textContent = (massInput.value || 0) + ' kg';
+    quickComp.textContent = `PE${pe.value}/PP${pp.value}/PS${ps.value}/O${other.value}`;
+    const cat = document.querySelector('input[name="cat"]:checked').value;
+    quickCat.textContent = cat;
+    quickTemp.textContent = document.getElementById('tempProfile').selectedOptions[0].text;
+    // validate composition
+    const sum = Number(pe.value)+Number(pp.value)+Number(ps.value)+Number(other.value);
+    if(sum > 100){ compWarning.style.display = 'block'; } else compWarning.style.display = 'none';
+    // pvc check: here "Others" used to simulate PVC presence; if >10 show warning
+    if(Number(other.value) > 10){ pvcWarning.style.display = 'block'; } else pvcWarning.style.display = 'none';
+  }
+  [pe,pp,ps,other,massInput].forEach(el => el.addEventListener('input', updateQuick));
+  document.querySelectorAll('input[name="cat"]').forEach(r=>r.addEventListener('change',updateQuick));
+  document.getElementById('tempProfile').addEventListener('change',updateQuick);
+  updateQuick();
+
+  // Simulation step sequence
+  const STEPS = ['Feed', 'Pyrolysis', 'Condensation', 'Collection', 'Complete'];
+  function runSimulation(){
+    const feedMass = Number(massInput.value) || 0;
+    const sumComp = Number(pe.value)+Number(pp.value)+Number(ps.value)+Number(other.value);
+    if(sumComp <= 0 || feedMass <= 0){ alert('Please enter feed mass and composition.'); return; }
+    if(sumComp > 100){ alert('Composition percentages exceed 100% — adjust sliders.'); return; }
+    // get catalyst & temp
+    const catalyst = document.querySelector('input[name="cat"]:checked').value;
+    const tempProfile = document.getElementById('tempProfile').value;
+
+    // Conversion math (simple, documented):
+    // liquid_yield_kg = feed_mass * BASE_YIELD * catalyst_factor * temp_factor * composition_factor
+    // composition_factor: heavier plastics may increase yield slightly; approximate via weighted average
+    // syngas_m3 = feed_mass * GAS_PER_KG[tempProfile] * (1 - liquid_fraction_factor)
+    // char_kg = feed_mass - liquid_kg - syngas_mass_equivalent (we approximate syngas as gas mass negligible for mass balance; derive char as remainder)
+    // energy_kWh = feed_mass * ENERGY_PER_KG[tempProfile]
+    // liquid_liters = liquid_kg / DENSITY_LIQUID
+
+    const catalystFactor = CATALYST_FACTORS[catalyst] || 1.0;
+    const tempFactor = TEMP_FACTORS[tempProfile] || 1.0;
+    // composition factor: weight composition to effect (PE:0.98, PP:1.0, PS:0.95, Others:0.9)
+    const compFactor = (pe.value*0.98 + pp.value*1.0 + ps.value*0.95 + other.value*0.9)/100;
+    const liquidKg = +(feedMass * BASE_YIELD * catalystFactor * tempFactor * compFactor).toFixed(3);
+    const liquidL = +(liquidKg / DENSITY_LIQUID).toFixed(2);
+    const gasM3 = +(feedMass * GAS_PER_KG[tempProfile] * (1 - (BASE_YIELD * tempFactor * catalystFactor * compFactor))).toFixed(2);
+    const energy = +(feedMass * ENERGY_PER_KG[tempProfile]).toFixed(2);
+    // approximate char as remainder (real syngas mass small vs gas volume so we treat char = feed - liquid)
+    const charKg = Math.max(0, +(feedMass - liquidKg).toFixed(3));
+    const yieldPctVal = Math.round((liquidKg/feedMass)*10000)/100;
+
+    // Setup for step-wise animation
+    let stepIndex = 0;
+    const totalSteps = STEPS.length;
+    // step durations (ms)
+    const durations = [800, 2200, 1600, 1000, 400];
+    progressBar.style.width = '0%';
+    stepLabel.textContent = 'Starting';
+    progressPct.textContent = '0%';
+    estLiquid.textContent = 'Calculating...';
+    estGas.textContent = 'Calculating...';
+    estChar.textContent = 'Calculating...';
+    estEnergy.textContent = 'Calculating...';
+    massBalance.textContent = '-';
+    yieldPct.textContent = '-';
+
+    // disable simulate button during run
+    simulateBtn.disabled = true;
+
+    function doStep(){
+      if(stepIndex >= totalSteps){
+        // finished
+        progressBar.style.width = '100%';
+        stepLabel.textContent = 'Complete';
+        progressPct.textContent = '100%';
+        // show results
+        estLiquid.textContent = liquidL + ' L';
+        estGas.textContent = gasM3 + ' m³';
+        estChar.textContent = charKg + ' kg';
+        estEnergy.textContent = energy + ' kWh';
+        massBalance.textContent = `${feedMass} kg → ${liquidKg.toFixed(3)} kg (liquid) + ${charKg.toFixed(3)} kg (char)`;
+        yieldPct.textContent = yieldPctVal + ' %';
+        simulateBtn.disabled = false;
+        // Save last result for download
+        lastReport = {
+          timestamp: new Date().toISOString(),
+          feedMass, composition: {PE:pe.value, PP:pp.value, PS:ps.value, Others:other.value},
+          catalyst, tempProfile, liquidKg, liquidL, gasM3, charKg, energy, yieldPct: yieldPctVal
+        };
+        return;
+      }
+      const stepName = STEPS[stepIndex];
+      stepLabel.textContent = stepName;
+      // animate progress for this step
+      const cumPctBefore = Math.round((stepIndex/totalSteps)*100);
+      const stepPct = Math.round(((stepIndex+1)/totalSteps)*100);
+      // animate width smoothly
+      progressBar.style.width = stepPct + '%';
+      progressPct.textContent = stepPct + '%';
+      // small UI updates during certain steps
+      if(stepName === 'Pyrolysis') estLiquid.textContent = 'Forming vapors...';
+      if(stepName === 'Condensation') estGas.textContent = 'Condensing fractions...';
+      if(stepName === 'Collection') estChar.textContent = 'Collecting char...';
+      stepIndex++;
+      setTimeout(doStep, durations[stepIndex-1] || 800);
+    }
+    doStep();
+  }
+
+  // lastReport for CSV
+  let lastReport = null;
+
+  simulateBtn.addEventListener('click', runSimulation);
+
+  // CSV download
+  downloadCSV.addEventListener('click', function(){
+    if(!lastReport){ alert('Run simulation first to generate a report.'); return; }
+    const rows = [
+      ['Timestamp','FeedMass(kg)','PE%','PP%','PS%','Others%','Catalyst','TempProfile','Liquid(kg)','Liquid(L)','Syngas(m3)','Char(kg)','Energy(kWh)','Yield%'],
+      [lastReport.timestamp,lastReport.feedMass,lastReport.composition.PE,lastReport.composition.PP,lastReport.composition.PS,lastReport.composition.Others,lastReport.catalyst,lastReport.tempProfile,lastReport.liquidKg,lastReport.liquidL,lastReport.gasM3,lastReport.charKg,lastReport.energy,lastReport.yieldPct]
+    ];
+    const csvContent = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'wastetofuel_report_' + (new Date().toISOString().slice(0,19).replace(/:/g,'-')) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+})();
+
+/* =========================
+   CONTACT FORM & LOCAL QUEUE + Mailto export
+   ========================= */
+(function(){
+  const form = document.getElementById('contactForm');
+  const modal = document.getElementById('modal');
+  const closeModal = document.getElementById('closeModal');
+  const openMailLink = document.getElementById('openMailLink');
+  const exportBtn = document.getElementById('exportRequest');
+  const reqDemoBtn = document.getElementById('reqDemoBtn');
+  const savedList = document.getElementById('savedList');
+  const clearQueueBtn = document.getElementById('clearQueue');
+
+  function loadQueue(){
+    const q = JSON.parse(localStorage.getItem('w2f_requests') || '[]');
+    return q;
+  }
+  function saveQueue(arr){ localStorage.setItem('w2f_requests', JSON.stringify(arr)); renderQueue(); }
+  function renderQueue(){
+    const q = loadQueue();
+    savedList.innerHTML = '';
+    if(q.length === 0){ savedList.innerHTML = '<div class="small">No saved requests</div>'; return; }
+    const ul = document.createElement('ul');
+    ul.className = 'small';
+    q.forEach((item, idx)=>{
+      const li = document.createElement('li');
+      li.textContent = `${new Date(item.timestamp).toLocaleString()} — ${item.name} (${item.org || '—'}) — ${item.email}`;
+      ul.appendChild(li);
+    });
+    savedList.appendChild(ul);
+  }
+  renderQueue();
+
+  // prepare mailto with form content
+  function prepareMailto(data){
+    const to = 'ashishnalawade683@gmail.com';
+    const subject = `Demo Request: Waste-to-Fuel — ${data.name || 'Anonymous'} (${data.org || 'NoOrg'})`;
+    const body = [
+      `Name: ${data.name}`,
+      `Organization: ${data.org || ''}`,
+      `Email: ${data.email}`,
+      `Location: ${data.location || ''}`,
+      `Waste per day (kg): ${data.waste || ''}`,
+      `Message: ${data.message || ''}`,
+      '',
+      '--- This email was prepared by Waste-to-Fuel demo site ---'
+    ].join('%0D%0A'); // URL-encoded newlines
+    return `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${body}`;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const data = {
+      timestamp: new Date().toISOString(),
+      name: document.getElementById('cname').value.trim(),
+      org: document.getElementById('corg').value.trim(),
+      email: document.getElementById('cemail').value.trim(),
+      location: document.getElementById('cloc').value.trim(),
+      waste: document.getElementById('cwaste').value,
+      message: document.getElementById('cmsg').value.trim()
+    };
+    // push to local queue
+    const q = loadQueue();
+    q.unshift(data);
+    saveQueue(q);
+    // show modal
+    modal.style.display = 'flex';
+    // open mailto link
+    const mailto = prepareMailto({name:data.name,org:data.org,email:data.email,location:data.location,waste:data.waste,message:data.message});
+    // open mail client in new tab (this will usually open email client)
+    window.location.href = mailto;
+  });
+
+  closeModal.addEventListener('click', function(){ document.getElementById('modal').style.display='none'; });
+  openMailLink.addEventListener('click', function(){
+    // gather current form values
+    const data = {
+      name: document.getElementById('cname').value.trim(),
+      org: document.getElementById('corg').value.trim(),
+      email: document.getElementById('cemail').value.trim(),
+      location: document.getElementById('cloc').value.trim(),
+      waste: document.getElementById('cwaste').value,
+      message: document.getElementById('cmsg').value.trim()
+    };
+    const mailto = prepareMailto(data);
+    window.location.href = mailto;
+  });
+
+  // Export demo request button opens prefilled mail using quick conversion app values and contact form values
+  document.getElementById('exportRequest').addEventListener('click', function(){
+    const name = document.getElementById('cname').value.trim() || 'DemoUser';
+    const org = document.getElementById('corg').value.trim() || 'Org';
+    const email = document.getElementById('cemail').value.trim() || '';
+    const mass = document.getElementById('mass').value || '100';
+    const comp = `${document.getElementById('pe').value}/${document.getElementById('pp').value}/${document.getElementById('ps').value}/${document.getElementById('other').value}`;
+    const body = `Name: ${name}%0D%0AOrg: ${org}%0D%0AEmail: ${email}%0D%0AFeedMass(kg): ${mass}%0D%0AComposition(PE/PP/PS/O): ${comp}%0D%0A`;
+    const mailto = `mailto:ashishnalawade683@gmail.com?subject=${encodeURIComponent('Demo request from site')}&body=${body}`;
+    window.location.href = mailto;
+  });
+
+  // Request Demo shortcut (scroll)
+  document.getElementById('reqDemoBtn').addEventListener('click', ()=>{ document.getElementById('contact').scrollIntoView({behavior:'smooth'}); });
+
+  clearQueueBtn.addEventListener('click', function(){
+    if(confirm('Clear saved requests?')){
+      localStorage.removeItem('w2f_requests');
+      renderQueue();
+    }
+  });
+})();
+
+/* =========================
+   IMPACT COUNTERS (IntersectionObserver)
+   ========================= */
+(function(){
+  const kco2 = document.getElementById('kco2');
+  const kfuel = document.getElementById('kfuel');
+  const kplastic = document.getElementById('kplastic');
+  const ksavings = document.getElementById('ksavings');
+
+  const targets = document.querySelectorAll('#impact');
+  // example targets (could be dynamic)
+  const goal = {co2:12450, fuel:3120, plastic:5200, savings:7850};
+
+  let animated = false;
+  function animate(el, to, duration=1400){
+    const start = 0;
+    const startTime = performance.now();
+    function step(now){
+      const p = Math.min(1, (now - startTime)/duration);
+      const ease = p < 0.5 ? 2*p*p : -1 + (4 - 2*p)*p;
+      el.textContent = Math.round(start + (to - start)*ease);
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting && !animated){
+        animated = true;
+        animate(kco2, goal.co2);
+        animate(kfuel, goal.fuel);
+        animate(kplastic, goal.plastic);
+        animate(ksavings, goal.savings);
+      }
+    });
+  }, {threshold:0.25});
+  obs.observe(document.getElementById('impact'));
+})();
+
+/* =========================
+   COLLAPSE FOR PROCESS PANEL
+   ========================= */
+document.getElementById('toggleProcess').addEventListener('click', function(){
+  const panel = document.getElementById('processPanel');
+  const expanded = this.getAttribute('aria-expanded') === 'true';
+  this.setAttribute('aria-expanded', String(!expanded));
+  if(expanded){ panel.style.display = 'none'; this.textContent = 'Show process details'; }
+  else { panel.style.display = 'block'; this.textContent = 'Hide process details'; }
+});
+
+/* =========================
+  TECHNICAL NOTES (comments for developer)
+  =========================
+  - To send form data to a backend instead of mailto:
+    Replace the mailto portion with a fetch POST to your endpoint, e.g.:
+
+    // Node/Express example (server-side)
+    /*
+      const express = require('express');
+      const app = express();
+      app.use(express.json());
+      app.post('/api/demo-request', (req, res) => {
+        // validate and send email via SMTP or service (SendGrid, SES)
+        // req.body contains form data
+        res.json({ok:true});
+      });
+      app.listen(3000);
+    */
+
+  
+
+</script>
+</body>
+</html>
